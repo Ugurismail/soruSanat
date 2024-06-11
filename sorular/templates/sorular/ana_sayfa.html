@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Soru Uygulamasi</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="sol">
+    <h1>Sorular</h1>
+    {% for soru in sorular %}
+        <div class="soru">
+            <a href="{% url 'soru_detay' soru.id %}">{{ soru.baslik }}</a>
+        </div>
+    {% endfor %}
+    <hr> <!-- Horizontal line separating the text from the diagram -->
+    <div id="mynetwork" style="height: 500px;"></div>
+</div>
+<script type="application/json" id="nodes">{{ nodes|safe }}</script>
+<script type="application/json" id="edges">{{ edges|safe }}</script>
+<script type="text/javascript" src="{% static 'js/diagram.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ soru.baslik }}</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="sol">
+    <h1>{{ soru.baslik }}</h1>
+    <div class="toolbar" style="display: {% if editable %}block{% else %}none{% endif %};">
+        <button onclick="execCmd('bold')">B</button>
+        <button onclick="execCmd('italic')"><i>I</i></button>
+        <button onclick="execCmd('underline')"><u>U</u></button>
+        <button onclick="execCmd('createLink')">Link</button>
+    </div>
+    <div class="content" contenteditable="{{ editable }}" style="text-align: justify;">
+        {{ soru.icerik }}
+    </div>
+    <hr> <!-- Horizontal line separating the text from the diagram -->
+    <div id="mynetwork" style="height: 500px;"></div>
+    <h3>Bağlantılı Sorular</h3>
+    {% for bagli_soru in bagli_sorular %}
+        <div class="soru">
+            <a href="{% url 'soru_detay' bagli_soru.id %}">{{ bagli_soru.baslik }}</a>
+        </div>
+    {% endfor %}
+    <h3>Yeni Soru Ekle</h3>
+    <form method="post">
+        {% csrf_token %}
+        <label for="baslik">Başlık:</label>
+        <input type="text" id="baslik" name="baslik" required><br>
+        <label for="icerik">İçerik:</label>
+        <textarea id="icerik" name="icerik" required></textarea><br>
+        <button type="submit">Ekle</button>
+    </form>
+</div>
+<script type="text/javascript" src="{% static 'js/diagram.js' %}"></script>
+<script>
+function execCmd(command) {
+    document.execCommand(command, false, null);
+}
+</script>
+</body>
+</html>
