@@ -1,22 +1,20 @@
-from django.shortcuts import render
-import json
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Soru
+from .forms import SoruForm
 
 def ana_sayfa(request):
     sorular = Soru.objects.all()
+    ilk_soru = sorular.first()
     nodes = [{"id": soru.id, "label": soru.baslik} for soru in sorular]
-    edges = []  # Eğer bağlantılarınız varsa buraya ekleyin
-    context = {
-        'sorular': sorular,
-        'nodes': json.dumps(nodes),
-        'edges': json.dumps(edges),
-    }
-    return render(request, 'ana_sayfa.html', context)
+    edges = [{"from": soru.ust_soru.id, "to": soru.id} for soru in sorular if soru.ust_soru]
+    return render(request, 'sorular/ana_sayfa.html', {'ilk_soru': ilk_soru, 'nodes': nodes, 'edges': edges})
 
 def soru_detay(request, soru_id):
+    sorular = Soru.objects.all()
     soru = get_object_or_404(Soru, id=soru_id)
-    alt_sorular = soru.alt_sorular.all()
-    sorular_recursive = Soru.objects.all()
+    bagli_sorular = soru.alt_sorular.all()
+    nodes = [{"id": s.id, "label": s.baslik} for s in sorular]
+    edges = [{"from": s.ust_soru.id, "to": s.id} for s in sorular if s.ust_soru]
     if request.method == "POST":
         form = SoruForm(request.POST)
         if form.is_valid():
@@ -26,10 +24,5 @@ def soru_detay(request, soru_id):
             return redirect('soru_detay', soru_id=soru.id)
     else:
         form = SoruForm()
-    return render(request, 'sorular/soru_detay.html', {
-        'soru': soru,
-        'alt_sorular': alt_sorular,
-        'form': form,
-        'sorular_recursive': sorular_recursive,
-        'current_soru_id': soru_id
-    })
+    editable = request.GET.get('edit', False)
+    return render(request, 'sorular/soru_detay.html', {'soru': soru, 'bagli_sorular': bagli_sorular, 'form': form, 'editable': editable, 'nodes': nodes, 'edges': edges})

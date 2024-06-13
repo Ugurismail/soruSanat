@@ -1,25 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Soru Uygulamasi</title>
+    <title>Soru Uygulaması</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<div class="sol">
-    <h1>Sorular</h1>
-    {% for soru in sorular %}
+<div class="container">
+    <div class="sol">
+        <h1>Sorular</h1>
         <div class="soru">
-            <a href="{% url 'soru_detay' soru.id %}">{{ soru.baslik }}</a>
+            <a href="{% url 'soru_detay' ilk_soru.id %}">{{ ilk_soru.baslik }}</a>
         </div>
-    {% endfor %}
-    <hr> <!-- Horizontal line separating the text from the diagram -->
-    <div id="mynetwork" style="height: 500px;"></div>
+        <hr> <!-- Diyagram ile metin arasında yatay çizgi -->
+        <div id="mynetwork" style="height: 800px; width: 100%;"></div>
+        <pre>{{ nodes|json_script:"nodes" }}</pre>
+        <pre>{{ edges|json_script:"edges" }}</pre>
+    </div>
+    <div class="sag">
+        <h3>Bağlantılı Sorular</h3>
+        {% for bagli_soru in ilk_soru.alt_sorular.all %}
+            <div class="soru">
+                <a href="{% url 'soru_detay' bagli_soru.id %}">{{ bagli_soru.baslik }}</a>
+            </div>
+        {% endfor %}
+        <h3>Yeni Soru Ekle</h3>
+        <form method="post">
+            {% csrf_token %}
+            <label for="baslik">Başlık:</label>
+            <input type="text" id="baslik" name="baslik" required><br>
+            <label for="icerik">İçerik:</label>
+            <textarea id="icerik" name="icerik" required></textarea><br>
+            <button type="submit">Ekle</button>
+        </form>
+    </div>
 </div>
-<script type="application/json" id="nodes">{{ nodes|safe }}</script>
-<script type="application/json" id="edges">{{ edges|safe }}</script>
+<script type="application/json" id="nodes">{{ nodes|json_script:"nodes" }}</script>
+<script type="application/json" id="edges">{{ edges|json_script:"edges" }}</script>
 <script type="text/javascript" src="{% static 'js/diagram.js' %}"></script>
 </body>
 </html>
