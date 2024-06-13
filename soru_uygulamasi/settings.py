@@ -57,7 +57,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'tr-tr'
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
+
+DEFAULT_CHARSET = 'utf-8'
 
 TEMPLATES = [
     {

@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             interaction: {
                 navigationButtons: true, // Navigasyon butonları aktif
-                keyboard: true // Klavye ile etkileşim aktif
+                keyboard: false // Klavye ile etkileşim aktif
             }
         };
 
