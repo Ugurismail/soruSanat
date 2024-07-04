@@ -12,9 +12,15 @@
 <div class="container">
     <div class="sol">
         <h1>Sorular</h1>
-        <div class="soru">
-            <a href="{% url 'soru_detay' ilk_soru.id %}">{{ ilk_soru.baslik }}</a>
-        </div>
+        {% if ilk_sorular %}
+            {% for ilk_soru in ilk_sorular %}
+                <div class="soru">
+                    <a href="{% url 'soru_detay' ilk_soru.id %}">{{ ilk_soru.baslik }}</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>İlk soruyu ekleyiniz.</p>
+        {% endif %}
         <hr> <!-- Diyagram ile metin arasında yatay çizgi -->
         <div id="mynetwork" style="height: 800px; width: 100%;"></div>
         <pre>{{ nodes|json_script:"nodes" }}</pre>
@@ -26,13 +32,9 @@
             <div id="arama_sonuclari"></div>
         </div>
         <h3>Bağlantılı Sorular</h3>
-        {% for bagli_soru in ilk_soru.alt_sorular.all %}
-            <div class="soru">
-                <a href="{% url 'soru_detay' bagli_soru.id %}">{{ bagli_soru.baslik }}</a>
-            </div>
-        {% endfor %}
+        <p>Bağlantılı soru bulunmamaktadır.</p>
         <h3>Yeni Soru Ekle</h3>
-        <form method="post">
+        <form method="post" action="{% url 'yeni_soru_ekle' %}">
             {% csrf_token %}
             <label for="baslik">Başlık:</label>
             <input type="text" id="baslik" name="baslik" required><br>

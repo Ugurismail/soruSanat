@@ -29,8 +29,20 @@ def soru_detay(request, soru_id):
     return render(request, 'sorular/soru_detay.html', {'soru': soru, 'bagli_sorular': bagli_sorular, 'form': form, 'editable': editable, 'nodes': nodes, 'edges': edges})
 
 def arama(request):
-    query = request.GET.get('q', '')
+    query = request.GET.get('q')
     if query:
-        results = Soru.objects.filter(baslik__icontains=query).values('id', 'baslik')
-        return JsonResponse(list(results), safe=False)
-    return JsonResponse([], safe=False)
+        sorular = Soru.objects.filter(baslik__icontains=query)
+        results = [{'id': soru.id, 'baslik': soru.baslik} for soru in sorular]
+    else:
+        results = []
+    return JsonResponse(results, safe=False)
+
+def yeni_soru_ekle(request):
+    if request.method == 'POST':
+        form = SoruForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('ana_sayfa')
+    else:
+        form = SoruForm()
+    return render(request, 'yeni_soru_ekle.html', {'form': form})

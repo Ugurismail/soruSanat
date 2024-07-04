@@ -75,15 +75,16 @@ document.addEventListener("DOMContentLoaded", function() {
     // Arama işlevi
     document.getElementById('arama_cubugu').addEventListener('keyup', function() {
         var query = this.value;
-        if (query.length > 2) {
+        var resultsDiv = document.getElementById('arama_sonuclari');
+        resultsDiv.innerHTML = ''; // Önceki sonuçları temizle
+
+        if (query.length >= 2) {
             fetch(`/arama/?q=${query}`)
                 .then(response => response.json())
                 .then(data => {
-                    var resultsDiv = document.getElementById('arama_sonuclari');
-                    resultsDiv.innerHTML = '';
                     data.forEach(item => {
                         var div = document.createElement('div');
-                        div.innerHTML = `<a href="/soru_detay/${item.id}">${item.baslik}</a>`;
+                        div.innerHTML = `<a href="/soru/${item.id}/">${item.baslik}</a>`;
                         resultsDiv.appendChild(div);
                     });
                 });
