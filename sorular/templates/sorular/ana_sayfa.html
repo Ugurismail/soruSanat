@@ -4,6 +4,7 @@
     <title>Soru Uygulaması</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
 </head>
@@ -20,6 +21,10 @@
         <pre>{{ edges|json_script:"edges" }}</pre>
     </div>
     <div class="sag">
+        <div class="arama">
+            <input type="text" id="arama_cubugu" placeholder="Ara...">
+            <div id="arama_sonuclari"></div>
+        </div>
         <h3>Bağlantılı Sorular</h3>
         {% for bagli_soru in ilk_soru.alt_sorular.all %}
             <div class="soru">

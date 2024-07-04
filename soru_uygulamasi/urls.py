@@ -6,4 +6,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.ana_sayfa, name='ana_sayfa'),
     path('soru/<int:soru_id>/', views.soru_detay, name='soru_detay'),
+    path('arama/', views.arama, name='arama')
 ]

@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Soru
 from .forms import SoruForm
+from django.http import JsonResponse
 
 def ana_sayfa(request):
     sorular = Soru.objects.all()
@@ -26,3 +27,10 @@ def soru_detay(request, soru_id):
         form = SoruForm()
     editable = request.GET.get('edit', False)
     return render(request, 'sorular/soru_detay.html', {'soru': soru, 'bagli_sorular': bagli_sorular, 'form': form, 'editable': editable, 'nodes': nodes, 'edges': edges})
+
+def arama(request):
+    query = request.GET.get('q', '')
+    if query:
+        results = Soru.objects.filter(baslik__icontains=query).values('id', 'baslik')
+        return JsonResponse(list(results), safe=False)
+    return JsonResponse([], safe=False)

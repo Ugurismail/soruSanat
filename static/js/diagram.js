@@ -71,4 +71,22 @@ document.addEventListener("DOMContentLoaded", function() {
     } else {
         console.error("Nodes or edges element not found");
     }
+
+    // Arama işlevi
+    document.getElementById('arama_cubugu').addEventListener('keyup', function() {
+        var query = this.value;
+        if (query.length > 2) {
+            fetch(`/arama/?q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    var resultsDiv = document.getElementById('arama_sonuclari');
+                    resultsDiv.innerHTML = '';
+                    data.forEach(item => {
+                        var div = document.createElement('div');
+                        div.innerHTML = `<a href="/soru_detay/${item.id}">${item.baslik}</a>`;
+                        resultsDiv.appendChild(div);
+                    });
+                });
+        }
+    });
 });
